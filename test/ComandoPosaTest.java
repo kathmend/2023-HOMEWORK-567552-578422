@@ -39,7 +39,7 @@ class ComandoPosaTest {
 	}
 	@Test
 	public void testEseguiComandoWithoutParametro() {
-		assertEquals(false ,session.getStanzaCorrente().hasAttrezzo("chiave"));
+		assertFalse(session.getStanzaCorrente().hasAttrezzo("chiave"));
 		posa= factory.costruisciComando("posa");
 
 		posa.esegui(this.session);

@@ -10,10 +10,10 @@ public class ComandoPosa implements Comando{
 	@Override
 	public void esegui(Partita partita) {
 		if(nomeAttrezzo == null) {
-			if(this.io!=null) 
+			if(this.io!=null) {
 			  io.mostraMessaggio("cosa vuoi posare?");
 			  io.mostraMessaggio(partita.getGiocatore().getBorsa().toString());
-			
+			}
 
 		}
 		else {

@@ -149,9 +149,10 @@ public class Stanza {
 		trovato = false;
 		 int i;
 		  for (i=0; i< this.numeroAttrezzi; i++) {
-			if(attrezzi[i]!=null)
-			  if (attrezzi[i].getNome().equals(nomeAttrezzo))
-				 trovato = true;
+			if(attrezzi[i]!=null) {
+			  if(attrezzi[i].getNome().equals(nomeAttrezzo))
+  				 trovato = true;
+			}
 		}
 		return trovato;
 	}
