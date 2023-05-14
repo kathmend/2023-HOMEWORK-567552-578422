@@ -4,7 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.uniroma3.diadia.Partita;
-import it.uniroma3.it.ambienti.Stanza;
+import it.uniroma3.it.ambienti.Labirinto;
+import it.uniroma3.it.ambienti.LabirintoBuilder;
 
 class PartitaTest {
     
@@ -12,36 +13,35 @@ class PartitaTest {
 	
 
 	
-	private Partita partita;
-	private Stanza biblioteca;
-	private Stanza bagno;
+	private Partita session;
+    private Labirinto labirinto;
 
 	
 
 	@BeforeEach
     public void setUp() {
-       this.partita = new Partita();
-       this.biblioteca = this.partita.getStanzaVincente();
-       this.bagno = new Stanza("bagno");
-       this.partita.setStanzaCorrente(bagno);
+		this.labirinto = new LabirintoBuilder()
+				.addStanzaIniziale("iniziale")
+				.addStanzaVincente("vincente")
+				.getLabirinto();
+		this.session = new Partita(this.labirinto);
        
-    	
-    	
    
     }
 	@Test
-	void testGetStanzaVincente() {
-	assertEquals(biblioteca,this.partita.getStanzaVincente());
+    void testVintaSeStanzaCorrenteEVincente() {
+		this.session.setStanzaCorrente(this.session.getStanzaVincente());
+		assertTrue(this.session.vinta());
+	}
+	@Test
+	public void testFinitaSeCFUFiniti() {
+		this.session.setCfu(0);
+		assertTrue(this.session.isFinita());
 	}
 
 	@Test
-	void testSetStanzaCorrente() {
-		assertEquals(bagno,this.partita.getStanzaCorrente());
-	}
-
-	@Test
-	void testGetStanzaCorrente() {
-		assertEquals(bagno,this.partita.getStanzaCorrente());
+    void testNonFinitaInizioPartita() {
+		assertFalse(this.session.isFinita());
 	}
 
 }

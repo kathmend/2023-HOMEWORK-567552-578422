@@ -26,7 +26,7 @@ class StanzaBuiaTest {
 	@Test
 	public void testGetDescrizioneWithLanterna() {
 		stanza.addAttrezzo(lanterna);
-		assertEquals( "stanza\nUscite:  nord est sud ovest\nAttrezzi nella stanza: lanterna (2kg)", stanza.getDescrizione());
+		assertEquals( "stanza\nUscite: [nord, sud, est, ovest]\nAttrezzi nella stanza: [lanterna (2kg)] ", stanza.getDescrizione());
 	}
 	@Test
 	public void testGetDescrizioneWithoutLanterna() {

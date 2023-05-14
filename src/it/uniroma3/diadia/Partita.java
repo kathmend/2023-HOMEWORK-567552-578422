@@ -20,12 +20,12 @@ public class Partita {
 	private boolean finita;
 	private Giocatore giocatore;
 	
-	public Partita(){
+	public Partita(Labirinto labirinto){
 		
 		this.labirinto = new Labirinto();
 		this.giocatore = new Giocatore();
 		this.finita = false;
-		this.stanzaCorrente = labirinto.getStanzaIngresso();
+		this.stanzaCorrente = labirinto.getStanzaIniziale();
 		this.stanzaVincente = labirinto.getStanzaVincente();
 		
 		
@@ -71,6 +71,10 @@ public class Partita {
 	
 	public Giocatore getGiocatore() {
 		  return this.giocatore;
+	}
+	
+	public void setCfu(int cfu) {
+		this.giocatore.setCfu(cfu);
 	}
 
 

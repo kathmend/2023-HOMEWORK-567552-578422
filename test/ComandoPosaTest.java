@@ -3,49 +3,60 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.IOConsole;
 import it.uniroma3.diadia.Partita;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
-import it.uniroma3.diadia.comandi.Comando;
 import it.uniroma3.diadia.comandi.ComandoPosa;
-import it.uniroma3.diadia.comandi.FabbricaDiComandi;
-import it.uniroma3.diadia.comandi.FabbricaDiComandiFisarmonica;
+import it.uniroma3.diadia.giocatore.Borsa;
+import it.uniroma3.it.ambienti.Labirinto;
+import it.uniroma3.it.ambienti.LabirintoBuilder;
 
 class ComandoPosaTest {
+	private static final String ATTREZZO_DA_POSARE = "AttrezzoDaPosare";
+	private ComandoPosa comandoPosa;
 	private Partita session;
-	private Attrezzo chiave;
-	private Comando posa;
-	private FabbricaDiComandi factory;
 	@BeforeEach
 	void setUp() {
-		session= new Partita();
-
-		chiave= new Attrezzo("chiave",1);
-		session.getStanzaCorrente();
-		this.session.getGiocatore().getBorsa().addAttrezzo(chiave);
-		posa= new ComandoPosa();
-		factory= new FabbricaDiComandiFisarmonica();
-
+		
+			this.comandoPosa = new ComandoPosa();
+			this.comandoPosa.setIo(new IOConsole());
+			Labirinto labirinto = new LabirintoBuilder()
+					.addStanzaIniziale("iniziale")
+					.getLabirinto();
+			this.session = new Partita(labirinto);
+			Borsa borsa = session.getGiocatore().getBorsa();
+			Attrezzo attrezzoNuovo = new Attrezzo(ATTREZZO_DA_POSARE, 1);
+			borsa.addAttrezzo(attrezzoNuovo);
 
 	}
 	@Test
-	public void testEseguiComandoPrendiWithParametro() {
-		assertNull(session.getStanzaCorrente().getAttrezzo("chiave"));
-		posa= factory.costruisciComando("posa chiave");
-
-		posa.esegui(this.session);
-		assertEquals(chiave, session.getStanzaCorrente().getAttrezzo("chiave"));
+	public void testEseguiComandoPrendiWithconAttrezzoPresente() {
+		this.comandoPosa.setParametro(ATTREZZO_DA_POSARE);
+		this.comandoPosa.esegui(session);
+		assertTrue(session.getStanzaCorrente().hasAttrezzo(ATTREZZO_DA_POSARE));
+		assertFalse(session.getGiocatore().getBorsa().hasAttrezzo(ATTREZZO_DA_POSARE));
 
 	
 	}
 	@Test
-	public void testEseguiComandoWithoutParametro() {
-		assertFalse(session.getStanzaCorrente().hasAttrezzo("chiave"));
-		posa= factory.costruisciComando("posa");
-
-		posa.esegui(this.session);
-		assertEquals(false ,session.getStanzaCorrente().hasAttrezzo("chiave"));
-
+	public void testEseguiComandoConAttrezzoNonPresente() {
+		String nonPresente = "attrezzoNonPresente";
+		this.comandoPosa.setParametro(nonPresente);
+		this.comandoPosa.esegui(session);
+		assertFalse(session.getStanzaCorrente().hasAttrezzo(nonPresente));
+		assertFalse(session.getStanzaCorrente().hasAttrezzo(ATTREZZO_DA_POSARE));
+		assertTrue(session.getGiocatore().getBorsa().hasAttrezzo(ATTREZZO_DA_POSARE));
 	
 	}
 
+	public void testEseguiComandoPosaConStanzaPiena() {
+			String nonPresente = "attrezzoNonPresente";
+			this.comandoPosa.setParametro(nonPresente);
+			this.comandoPosa.esegui(session);
+			assertFalse(session.getStanzaCorrente().hasAttrezzo(nonPresente));
+			assertFalse(session.getStanzaCorrente().hasAttrezzo(ATTREZZO_DA_POSARE));
+			assertTrue(session.getGiocatore().getBorsa().hasAttrezzo(ATTREZZO_DA_POSARE));
+		
+		}
+	
 }

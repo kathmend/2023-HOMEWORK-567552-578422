@@ -3,48 +3,62 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.IOConsole;
 import it.uniroma3.diadia.Partita;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
-import it.uniroma3.diadia.comandi.Comando;
 import it.uniroma3.diadia.comandi.ComandoPrendi;
-import it.uniroma3.diadia.comandi.FabbricaDiComandi;
-import it.uniroma3.diadia.comandi.FabbricaDiComandiFisarmonica;
-import it.uniroma3.it.ambienti.Stanza;
+import it.uniroma3.diadia.giocatore.Borsa;
+import it.uniroma3.it.ambienti.Labirinto;
+import it.uniroma3.it.ambienti.LabirintoBuilder;
 
 class ComandoPrendiTest {
+	
+	private static final String ATTREZZO_INIZIALMENTE_NELLA_STANZA = "AttrezzoDaPrendere";
+	private ComandoPrendi comandoPrendi;
 	private Partita session;
-	private Stanza stanzaCorrente;
-	private Attrezzo chiave;
-	private Comando prendi;
-	private FabbricaDiComandi factory;
 	@BeforeEach
 	void setUp() {
-		this.session = new Partita();
-		this.chiave = new Attrezzo("chiave",1);
-		this.stanzaCorrente = session.getStanzaCorrente();
-		this.stanzaCorrente.addAttrezzo(chiave);
-		this.prendi = new ComandoPrendi();
-		this.factory = new FabbricaDiComandiFisarmonica();
+		this.comandoPrendi = new ComandoPrendi();
+		this.comandoPrendi.setIo(new IOConsole());
+		Labirinto labirinto = new LabirintoBuilder()
+				.addStanzaIniziale("iniziale")
+				.getLabirinto();
+		this.session = new Partita(labirinto);
+		Attrezzo attrezzoNuovo = new Attrezzo(ATTREZZO_INIZIALMENTE_NELLA_STANZA, 1);
+		this.session.getStanzaCorrente().addAttrezzo(attrezzoNuovo);
 		
 	}
 	
 	@Test
-	public void testEseguiComandoPrendiWithParametro() {
-		assertNull(session.getGiocatore().getBorsa().getAttrezzo("chiave"));
-		prendi= factory.costruisciComando("prendi chiave");
-		prendi.esegui(this.session);
-		assertEquals(chiave, session.getGiocatore().getBorsa().getAttrezzo("chiave"));
+	public void testEseguiComandoPrendiWithAttrezzooPresente() {
+		this.comandoPrendi.setParametro(ATTREZZO_INIZIALMENTE_NELLA_STANZA);
+		this.comandoPrendi.esegui(session);
+		assertTrue(session.getGiocatore().getBorsa().hasAttrezzo(ATTREZZO_INIZIALMENTE_NELLA_STANZA));
+		assertFalse(session.getStanzaCorrente().hasAttrezzo(ATTREZZO_INIZIALMENTE_NELLA_STANZA));
 
 	
 	}
 	@Test
-	public void testEseguiComandoWithoutParametro() {
+	public void testEseguiComandoWithoutAttrezzoPresente() {
 		
-		prendi= factory.costruisciComando("prendi");
-		prendi.esegui(this.session);
-		assertEquals(0,this.session.getGiocatore().getBorsa().getPeso());
+		String nonPresente = "attrezzoNonPresente";
+		this.comandoPrendi.setParametro(nonPresente);
+		this.comandoPrendi.esegui(session);
+		assertFalse(session.getGiocatore().getBorsa().hasAttrezzo(nonPresente));
+		assertFalse(session.getGiocatore().getBorsa().hasAttrezzo(ATTREZZO_INIZIALMENTE_NELLA_STANZA));
+		assertTrue(session.getStanzaCorrente().hasAttrezzo(ATTREZZO_INIZIALMENTE_NELLA_STANZA));
 
 	
+	}
+
+	@Test
+	public void testEseguiComandoPrendiWithBorsaPiena() {
+		Borsa borsa = session.getGiocatore().getBorsa();
+		borsa.addAttrezzo(new Attrezzo("attrezzoPesante", borsa.getPesoMax()));
+		this.comandoPrendi.setParametro(ATTREZZO_INIZIALMENTE_NELLA_STANZA);
+		this.comandoPrendi.esegui(session);
+		assertFalse(session.getGiocatore().getBorsa().hasAttrezzo(ATTREZZO_INIZIALMENTE_NELLA_STANZA));
+		
 	}
 
 
