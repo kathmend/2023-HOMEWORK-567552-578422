@@ -29,9 +29,8 @@ public interface Comando {
 	    
 	    public String getParametro();
 	    
-	    public IO getIO();
+	    
 	    
 	    public void setIo(IO io);
-	    
-   
+
 }

@@ -22,16 +22,17 @@ public class Partita {
 	
 	public Partita(Labirinto labirinto){
 		
-		this.labirinto = new Labirinto();
+		this.labirinto = labirinto;
 		this.giocatore = new Giocatore();
 		this.finita = false;
-		this.stanzaCorrente = labirinto.getStanzaIniziale();
-		this.stanzaVincente = labirinto.getStanzaVincente();
 		
 		
 	}
 
-   
+	public Labirinto getLabirinto(){
+		return labirinto;
+	}
+
 
 	public Stanza getStanzaVincente() {
 		return stanzaVincente;

@@ -1,27 +1,41 @@
 package it.uniroma3.it.ambienti;
 
+import it.uniroma3.it.ambienti.Stanza;
+import it.uniroma3.it.ambienti.Direzione;
+
 public class StanzaBloccata extends Stanza{
-	private String nsePassa;
+	
+	private Direzione nsePassa;
 	private String passPartout;
-	
-	public StanzaBloccata(String nome, String attrezzoSbloccante, String direzioneBloccata) {
+
+	public StanzaBloccata(String nome, Direzione direzioneBloccata, String attrezzoSbloccante) {
 		super(nome);
-		this.nsePassa= direzioneBloccata;
-		this.passPartout= attrezzoSbloccante;
+		this.nsePassa = direzioneBloccata;
+		this.passPartout = attrezzoSbloccante;
 	}
-	
+
 	
 
 	@Override
-	public Stanza getStanzaAdiacente(String direzione) {
-		if(direzione.equals(this.nsePassa) && !super.hasAttrezzo(this.passPartout))
+	public Stanza getStanzaAdiacente(Direzione direzione) {
+		if(nsePassa.equals(direzione) && !super.hasAttrezzo(this.passPartout)) 
 			return this;
-	    return super.getStanzaAdiacente(nsePassa);
+		return super.getStanzaAdiacente(nsePassa);
+		   
+		
+			
+		
+	    
 	}
+	
+	
+	
 	@Override
 	public String getDescrizione() {
-		if(!super.hasAttrezzo(this.passPartout))
-			return ("Stanza Bloccata");
-		return this.getStanzaAdiacente(nsePassa).toString();
+		String bloccata = "Stanza bloccata nella direzione: "+ nsePassa +"\nPrendi il " +passPartout + " e posalo nella stanza";
+
+		if(!this.hasAttrezzo(passPartout))
+			return bloccata;
+		return super.getDescrizione();
 	}
 }

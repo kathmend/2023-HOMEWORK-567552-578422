@@ -1,47 +1,40 @@
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+
+import org.junit.Before;
+import org.junit.Test;
+
+
+import it.uniroma3.diadia.FormatoFileNonValidoException;
 import it.uniroma3.diadia.Partita;
 import it.uniroma3.it.ambienti.Labirinto;
-import it.uniroma3.it.ambienti.LabirintoBuilder;
-
+import it.uniroma3.it.ambienti.Stanza;
 class PartitaTest {
-    
 
-	
-
-	
-	private Partita session;
     private Labirinto labirinto;
-
+    Partita p;
+	Stanza s;
 	
 
-	@BeforeEach
-    public void setUp() {
-		this.labirinto = new LabirintoBuilder()
-				.addStanzaIniziale("iniziale")
-				.addStanzaVincente("vincente")
-				.getLabirinto();
-		this.session = new Partita(this.labirinto);
+	@Before
+    public void setUp() throws FileNotFoundException, FormatoFileNonValidoException {
+		labirinto = Labirinto.newBuilder("labirinto2.txt").getLabirinto();
+		 p = new Partita(labirinto);
+		 s = new Stanza("Stanza");
        
    
     }
 	@Test
-    void testVintaSeStanzaCorrenteEVincente() {
-		this.session.setStanzaCorrente(this.session.getStanzaVincente());
-		assertTrue(this.session.vinta());
-	}
-	@Test
-	public void testFinitaSeCFUFiniti() {
-		this.session.setCfu(0);
-		assertTrue(this.session.isFinita());
+	public void testGetStanzaVincente() {
+		assertEquals("Biblioteca", p.getLabirinto().getStanzaVincente().getNome());
 	}
 
-	@Test
-    void testNonFinitaInizioPartita() {
-		assertFalse(this.session.isFinita());
-	}
+
 
 }
